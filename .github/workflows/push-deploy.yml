@@ -1,0 +1,49 @@
+on:
+  push:
+    branches:
+      - main
+env:
+  KUBE_CONFIG: ${{secrets.KUBE_CONFIG}}
+
+jobs:
+  kube-skaffold-cicd:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setting Kubernetes Config           
+      run: |
+        # KUBECTL SETTING
+        echo "Installing kubectl.."
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+        echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+        kubectl version --client
+        echo "KUBE_CONFIG path"
+        mkdir ~/.kube/
+        ls ~/.kube/
+        echo "Show KUBE_CONFIG.."
+        echo "trying to set KUBE_CONFIG.."
+        echo "$KUBE_CONFIG" > ~/.kube/config
+        echo "trying to Get Nodes"
+        kubectl get nodes
+
+    - name: Setting Skaffold
+      run: |        
+        # SKAFFOLD TIME
+        echo "Installing SKaffold..."
+        curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+        sudo install skaffold /usr/local/bin/
+        echo "Verifying SKaffold installation..."
+        skaffold version
+
+    - name: Deploying Develop
+      run: | 
+        echo "Deploying develop...."
+        skaffold init --kubernetes-manifest deploy.yaml --skip-build --force
+        skaffold run --namespace=develop
+      shell: bash
+
+
+        

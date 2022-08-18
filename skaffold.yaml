@@ -1,0 +1,8 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: skaffold-digitalocean
+deploy:
+  kubectl:
+    manifests:
+    - deploy.yaml

@@ -14,6 +14,11 @@ on:
       - main
 env:
   KUBE_CONFIG: ${{secrets.KUBE_CONFIG}}
+  OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+  OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+  OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+  OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+  OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
 
 jobs:
   kube-skaffold-cicd:
@@ -30,7 +35,7 @@ jobs:
         mkdir ~/.kube/
         ls ~/.kube/
         echo "trying to set KUBE_CONFIG.."
-        echo "$KUBE_CONFIG" > ~/.kube/config
+        #echo "$KUBE_CONFIG" > ~/.kube/config
         echo "trying to Get Nodes"
         echo "show me the config"
         kubectl config view        
@@ -43,13 +48,22 @@ jobs:
         sudo install skaffold /usr/local/bin/
         echo "Verifying SKaffold installation..."
         skaffold version
-    
+
+    - name: Configure Kubectl
+      uses: oracle-actions/configure-kubectl-oke@v1.0
+      id: test-configure-kubectl-oke-action
+      with:
+        cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+
+    - name: Run Kubectl
+      run: kubectl get nodes -A    
+      
     - name: Deploying Develop
       run: | 
-        kubectl create namespace develop || echo "Ya existe el namespace develop"
+        #kubectl create namespace develop || echo "Ya existe el namespace develop"
         echo "Deploying develop...."
-        skaffold init --kubernetes-manifest deploy.yaml --skip-build --force
-        skaffold run --namespace=develop       
+        #skaffold init --kubernetes-manifest deploy.yaml --skip-build --force
+        #skaffold run --namespace=develop       
       shell: bash
 
     - name: Testing installations

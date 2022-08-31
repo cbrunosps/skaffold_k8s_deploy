@@ -6,16 +6,16 @@ build:
   local:
     push: true
   artifacts:
-  - image: docker.io/{{secrets.DOCKERHUB_USERNAME}}/examplevotingapp_result
+  - image: docker.io/cbrunosps/examplevotingapp_result
     context: result
     docker:
       dockerfile: Dockerfile
 
-  - image: docker.io/{{secrets.DOCKERHUB_USERNAME}}/examplevotingapp_vote
+  - image: docker.io/cbrunosps/examplevotingapp_vote
     context: vote
     docker:
       dockerfile: Dockerfile
-  - image: docker.io/{{secrets.DOCKERHUB_USERNAME}}/examplevotingapp_worker
+  - image: docker.io/cbrunosps/examplevotingapp_worker
     context: worker
     docker:
       dockerfile: Dockerfile

@@ -62,7 +62,7 @@ jobs:
       run: | 
         #kubectl create namespace develop || echo "Ya existe el namespace develop"
         echo "Deploying develop...."
-        #skaffold init --kubernetes-manifest deploy.yaml --skip-build --force
+        
         #skaffold run --namespace=develop       
       shell: bash
 

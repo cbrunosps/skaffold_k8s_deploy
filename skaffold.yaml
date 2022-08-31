@@ -3,6 +3,9 @@ kind: Config
 metadata:
   name: example-voting-app
 build:
+  tagPolicy:
+    envTemplate:
+      template: "{{.AMBIENTE}}-{{.VERSION}}"
   local:
     push: true
   artifacts:

@@ -3,28 +3,23 @@ kind: Config
 metadata:
   name: example-voting-app
 build:
+  local:
+    push: true
   artifacts:
-  - image: dockersamples/examplevotingapp_result
+  - image: docker.io/{{secrets.DOCKERHUB_USERNAME}}/examplevotingapp_result
     context: result
     docker:
       dockerfile: Dockerfile
-  - image: dockersamples/examplevotingapp_vote
+
+  - image: docker.io/{{secrets.DOCKERHUB_USERNAME}}/examplevotingapp_vote
     context: vote
     docker:
       dockerfile: Dockerfile
-  - image: dockersamples/examplevotingapp_worker
+  - image: docker.io/{{secrets.DOCKERHUB_USERNAME}}/examplevotingapp_worker
     context: worker
     docker:
       dockerfile: Dockerfile
 deploy:
   kubectl:
     manifests:
-    - kubernetes-specifications/db-deployment.yaml
-    - kubernetes-specifications/db-service.yaml
-    - kubernetes-specifications/redis-deployment.yaml
-    - kubernetes-specifications/redis-service.yaml
-    - kubernetes-specifications/result-deployment.yaml
-    - kubernetes-specifications/result-service.yaml
-    - kubernetes-specifications/vote-deployment.yaml
-    - kubernetes-specifications/vote-service.yaml
-    - kubernetes-specifications/worker-deployment.yaml
+    - kubernetes-specifications/*

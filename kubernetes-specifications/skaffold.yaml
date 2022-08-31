@@ -1,0 +1,16 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: kubernetes-specifications
+deploy:
+  kubectl:
+    manifests:
+    - db-deployment.yaml
+    - db-service.yaml
+    - redis-deployment.yaml
+    - redis-service.yaml
+    - result-deployment.yaml
+    - result-service.yaml
+    - vote-deployment.yaml
+    - vote-service.yaml
+    - worker-deployment.yaml

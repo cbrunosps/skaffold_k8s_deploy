@@ -30,7 +30,7 @@ env:
   OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
   OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
   AMBIENTE: develop
-  VERSION: ${{ gitub.sha }}
+  VERSION: ${{ github.sha }}
 
 jobs:
   kube-skaffold-cicd:

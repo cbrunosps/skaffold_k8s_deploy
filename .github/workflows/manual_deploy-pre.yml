@@ -1,4 +1,4 @@
-name: deploy_dev
+name: 2 Promote to Preprod 🚀
 
 on:
   workflow_dispatch:

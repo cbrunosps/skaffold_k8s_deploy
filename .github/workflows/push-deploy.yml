@@ -8,10 +8,16 @@ on:
         required: true
         default: false
         type: boolean
-      version:
-        description: 'Versión a liberar'
+      promtail:
+        description: 'Deploy Promtail?'
+        default: false
         required: true
-        type: string      
+        type: boolean
+      version:
+        description: 'Release version'
+        required: true
+        type: string
+      
         
 env:
   KUBE_CONFIG: ${{secrets.KUBE_CONFIG}}

@@ -96,3 +96,13 @@ jobs:
         kubectl get pods -n monitoring
         kubectl get svc -n monitoring
       shell: bash
+      
+    - name: Deploying Promtail 
+      if: ${{ inputs.promtail == true }}
+      run: |
+        curl -fsS https://raw.githubusercontent.com/grafana/loki/master/tools/promtail.sh | sh -s 256193 ${{ secrets.loki_token }} logs-prod3.grafana.net default | kubectl apply --namespace=default -f  -
+    - name: Testing installations with Prometheus
+      if: ${{ inputs.prometheus == true }}
+      run: | 
+        kubectl get pods
+      shell: bash

@@ -31,12 +31,12 @@ env:
   OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
   OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
   OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
-  environment: develop
   VERSION: ${{ github.sha }}
 
 jobs:
   kube-skaffold-cicd:
     runs-on: ubuntu-22.04
+    environment: develop
     steps:
     - uses: actions/checkout@v3
 

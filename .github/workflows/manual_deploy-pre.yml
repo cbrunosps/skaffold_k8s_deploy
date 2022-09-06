@@ -109,6 +109,11 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Validating Kubernetes manifests
+      run: |
+        echo "Installing datree"
+        curl https://get.datree.io | /bin/bash
+        datree test kubernetes-specifications/* --no-record
 
     - name: Setting Kubernetes Config           
       run: |

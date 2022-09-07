@@ -51,7 +51,7 @@ jobs:
       run: |
         echo "Installing datree"
         curl https://get.datree.io | /bin/bash
-        datree test kubernetes-specifications/* --no-record
+        #datree test kubernetes-specifications/* --no-record
 
     - name: Setting Kubernetes Config           
       run: |

@@ -28,7 +28,7 @@ env:
   OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
   OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
   OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
-  AMBIENTE: preproduction
+  AMBIENTE: preprod
   VERSION: ${{ inputs.version }}
 
 jobs:
@@ -141,19 +141,18 @@ jobs:
     - name: Run Kubectl
       run: kubectl get nodes -A    
       
-    - name: Deploying Develop
+    - name: Deploying
       run: | 
-        kubectl create namespace develop || echo "Ya existe el namespace develop"
-        echo "Deploying develop...."
+        kubectl create namespace $AMBIENTE || echo "Ya existe el namespace $AMBIENTE"
+        echo "Deploying $AMBIENTE...."
         
-        skaffold run --namespace=develop     
+        skaffold run --namespace=$AMBIENTE     
       shell: bash
 
     - name: Testing installations
       run: | 
-        kubectl get pods
-        kubectl get pods -n develop
-        kubectl get svc -n develop
+        kubectl get pods -n $AMBIENTE
+        kubectl get svc -n $AMBIENTE
     
     
     - name: Deploying prometheus 
@@ -165,6 +164,7 @@ jobs:
         helm install prometheus prometheus-community/prometheus
         kubectl get svc -n monitoring
         echo "Editar el servicio prometheus-server y convertirlo en LoadBalancer"
+
     - name: Testing installations with Prometheus
       if: ${{ inputs.prometheus == true }}
       run: | 

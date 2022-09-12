@@ -124,19 +124,19 @@ jobs:
     - name: Run Kubectl
       run: kubectl get nodes -A    
       
-    - name: Deploying Develop
+    - name: Deploying
       run: | 
-        kubectl create namespace develop || echo "Ya existe el namespace develop"
-        echo "Deploying develop...."
+        kubectl create namespace $AMBIENTE || echo "Ya existe el namespace $AMBIENTE"
+        echo "Deploying ...."
         
-        skaffold run --namespace=develop     
+        skaffold run --namespace=$AMBIENTE     
       shell: bash
 
     - name: Testing installations
       run: | 
         kubectl get pods
-        kubectl get pods -n develop
-        kubectl get svc -n develop
+        kubectl get pods -n $AMBIENTE
+        kubectl get svc -n $AMBIENTE
     
     
     - name: Deploying prometheus 

@@ -1,5 +1,5 @@
 FROM node:10-slim
-
+ 
 # add curl for healthcheck
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \

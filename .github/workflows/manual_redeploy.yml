@@ -31,7 +31,7 @@ env:
 jobs:
   kube-skaffold-cicd:
     runs-on: ubuntu-22.04
-    environment: production
+    environment: ${{ env.AMBIENTE }}
     steps:
     - uses: actions/checkout@v2
       with:

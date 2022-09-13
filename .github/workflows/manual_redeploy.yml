@@ -11,8 +11,13 @@ on:
         type: string
       ambiente:
         description: 'Ambiente en el que se desplegará 📭'
-      
-        
+        required: true
+        type: choice
+        options:
+          - develop
+          - preprod
+          - production
+    
 env:
   KUBE_CONFIG: ${{secrets.KUBE_CONFIG}}
   OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}

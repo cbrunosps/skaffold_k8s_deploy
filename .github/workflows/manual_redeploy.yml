@@ -1,24 +1,16 @@
-name: 2 Promote to Preprod 🚀
+name: 4 Redeploy 🐛
 
-concurrency: preprod
+concurrency: production
 
 on:
   workflow_dispatch:
     inputs:
-      prometheus:
-        description: 'Deploy Prometheus?'
-        required: true
-        default: false
-        type: boolean
-      promtail:
-        description: 'Deploy Promtail?'
-        default: false
-        required: true
-        type: boolean
       version:
         description: 'Release version 📦'
         required: true
         type: string
+      ambiente:
+        description: 'Ambiente en el que se desplegará 📭'
       
         
 env:
@@ -28,80 +20,31 @@ env:
   OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
   OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
   OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
-  AMBIENTE: preprod
+  AMBIENTE: production
   VERSION: ${{ inputs.version }}
 
 jobs:
   kube-skaffold-cicd:
     runs-on: ubuntu-22.04
-    environment: preproduction    
+    environment: production
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: ${{ github.head_ref }}
         fetch-depth: 0
-        
-    - if: ${{ ! startsWith(inputs.version, 'fix/') }}
-      name: "Validar número de versión"
+
+    - name: "Validar número de versión"
       run: |
         echo "Version ${{inputs.version}}"
-        [[ "${{inputs.version}}" =~ ^([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)$ ]] && echo "Correcto" || exit 1
-        echo "Validando si ya existe un release"
-        ! git ls-remote --exit-code --heads origin releases/${{inputs.version}}
+        [[ "${{inputs.version}}" =~ ^([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*).*$ ]] && echo "Correcto" || exit 1
     
-    - name: Configurar Git
+    - name: "Configurar Git"
       run: |
         git config --global user.name 'Github'
         git config --global user.email 'workflow@noreply.github.com'
         git branch --show-current
+        git fetch
+        git checkout releases/${{inputs.version}}
 
-    # Si el tag es nuevo lo crea
-    # Si ya existe el tag, lo elimina del repositorio (local y remoto) y lo crea de nuevo en el ultimo commit de main
-    - if: ${{ ! startsWith(inputs.version, 'fix') }}
-      name: "Crear tag de pre-release"
-      run: |
-        
-        echo "VER=${{inputs.version}}" >> $GITHUB_ENV
-                
-        ############ Si es versión normal.
-        if [[ ! "${{inputs.version}}" =~ ^([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)$ ]]; \
-        then exit 1; fi
-        git tag --force ${{inputs.version}} 
-        git push origin ${{inputs.version}} --force     
-
-    - if: ${{ startsWith(inputs.version, 'fix') }}
-      name: "Crear tag de pre-release (desde fix)"
-      run: |
-        ############ Si es hotfix
-        VER=(${{ inputs.version }})
-        VER="${VER:4:10}"
-        # En caso de que se esté tratando con una rama de hotfix, se hace checkout a esa rama.
-        if [[ ${{inputs.version}} == "fix/"$VER ]]; then git checkout ${{inputs.version}}; fi
-        # La variable VER, contendrá el input. Y en caso de que ese contenido comience con fix/ se recortará.
-        if [[ ${{inputs.version}} == "fix/"$VER ]]; then git tag --force $VER; fi 
-        if [[ ${{inputs.version}} == "fix/"$VER ]]; then git push origin $VER --force; fi
-
-    # Se crea el pre-release
-    # Si ya existe, primero se elimina y se crea de nuevo
-    - if: ${{ startsWith(inputs.version, 'fix') }}
-      name: "Release (desde fix)"
-      run: |
-        VER=(${{ inputs.version }})
-        VER="${VER:4:10}"
-        (gh release create $VER --title $VER -F CHANGELOG.md --prerelease) || \
-        (gh release delete $VER -y && gh release create $VER --title $VER -F CHANGELOG.md --prerelease)
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    # Se crea el pre-release
-    # Si ya existe, primero se elimina y se crea de nuevo
-    - name: "Release"
-      if: ${{ ! startsWith(inputs.version, 'fix') }}
-      run: |
-        (gh release create ${{ inputs.version }} --title ${{ inputs.version }} -F CHANGELOG.md --prerelease) || \
-        (gh release delete ${{ inputs.version }} -y && gh release create ${{ inputs.version }} --title ${{ inputs.version }} -F CHANGELOG.md --prerelease)
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 ##################################################################
     - name: Login to Docker Hub
@@ -144,13 +87,14 @@ jobs:
     - name: Deploying
       run: | 
         kubectl create namespace $AMBIENTE || echo "Ya existe el namespace $AMBIENTE"
-        echo "Deploying $AMBIENTE...."
+        echo "Deploying ...."
         
         skaffold run --namespace=$AMBIENTE     
       shell: bash
 
     - name: Testing installations
       run: | 
+        kubectl get pods
         kubectl get pods -n $AMBIENTE
         kubectl get svc -n $AMBIENTE
     
@@ -164,7 +108,6 @@ jobs:
         helm install prometheus prometheus-community/prometheus
         kubectl get svc -n monitoring
         echo "Editar el servicio prometheus-server y convertirlo en LoadBalancer"
-
     - name: Testing installations with Prometheus
       if: ${{ inputs.prometheus == true }}
       run: | 

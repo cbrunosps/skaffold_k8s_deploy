@@ -15,10 +15,7 @@ on:
         default: false
         required: true
         type: boolean
-      version:
-        description: 'Release version'
-        required: false
-        type: string
+        
   push:
     branches:
       - main

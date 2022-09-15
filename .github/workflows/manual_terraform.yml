@@ -62,6 +62,39 @@ jobs:
 
 ### Terraform DR
 
+  Infra_plan:
+    if: ${{ inputs.terraform_dr == true }}
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - uses: hashicorp/setup-terraform@v2 
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::${{secrets.DEV_AWS_ACCOUNT_ID}}:role/rol_despliegue
+        role-session-name: rol_despliegue
+        aws-region: us-west-2
+        
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan -no-color
+      continue-on-error: true
+
+
 ### Terraform apply
   Infra_deploy:
     needs: Infra_plan

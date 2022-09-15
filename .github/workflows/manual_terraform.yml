@@ -15,14 +15,7 @@ on:
         default: false
         required: true
         type: boolean
-      ambiente:
-        description: 'Ambiente en el que se desplegará 📭'
-        required: true
-        type: choice
-        options:
-          - develop
-          - preprod
-          - production
+
 defaults:
   run:
     working-directory: "infra"

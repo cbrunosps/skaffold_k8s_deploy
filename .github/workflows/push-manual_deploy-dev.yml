@@ -15,7 +15,16 @@ on:
         default: false
         required: true
         type: boolean
-        
+      terraform:
+        description: 'Deploy Terraform OCI?'
+        default: false
+        required: true
+        type: boolean
+      terraform_dr:
+        description: 'Deploy Terraform AWS?'
+        default: false
+        required: true
+        type: boolean         
   push:
     branches:
       - main

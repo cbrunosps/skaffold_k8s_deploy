@@ -60,7 +60,7 @@ jobs:
 
 ### Terraform DR
 
-  Infra_plan:
+  Infra_plan_DR:
     if: ${{ inputs.terraform_dr == true }}
     runs-on: ubuntu-22.04
     steps:

@@ -25,7 +25,7 @@ on:
           - production
 defaults:
   run:
-    working-directory: "infra/"
+    working-directory: "infra"
 
 env:
   KUBE_CONFIG: ${{secrets.KUBE_CONFIG}}
@@ -42,7 +42,6 @@ jobs:
 ### Terraform plan
   Infra_plan:
     if: ${{ inputs.terraform == true }}
-    working-directory: infra
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
@@ -72,6 +71,7 @@ jobs:
 
 ### Terraform apply
   Infra_deploy:
+    needs: Infra_plan
     runs-on: ubuntu-22.04
     environment: 'infra'
     steps:

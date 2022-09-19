@@ -93,30 +93,3 @@ jobs:
         kubectl get pods
         kubectl get pods -n develop
         kubectl get svc -n develop
-    
-    
-    - name: Deploying prometheus 
-      if: ${{ inputs.prometheus == true }}
-      run: |
-        kubectl create namespace monitoring || echo "Ya existe el namespace monitoring"
-        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-        helm repo update
-        helm install prometheus prometheus-community/prometheus
-        kubectl get svc -n monitoring
-        echo "Editar el servicio prometheus-server y convertirlo en LoadBalancer"
-    - name: Testing installations with Prometheus
-      if: ${{ inputs.prometheus == true }}
-      run: |
-        kubectl get pods -n monitoring
-        kubectl get svc -n monitoring
-      shell: bash
-      
-    - name: Deploying Promtail 
-      if: ${{ inputs.promtail == true }}
-      run: |
-        curl -fsS https://raw.githubusercontent.com/grafana/loki/master/tools/promtail.sh | sh -s 256193 ${{ secrets.LOKI_TOKEN }} logs-prod3.grafana.net default | kubectl apply --namespace=default -f  -
-    - name: Testing installations with Prometheus
-      if: ${{ inputs.prometheus == true }}
-      run: |
-        kubectl get pods
-      shell: bash

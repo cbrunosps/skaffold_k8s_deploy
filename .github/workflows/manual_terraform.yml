@@ -61,9 +61,9 @@ jobs:
       id: plan
       run: terraform plan -no-color
       continue-on-error: true
+    working-directory: "infra/oci"
 
 ### Terraform DR
-
   Infra_plan_DR:
     if: ${{ inputs.terraform_dr == true }}
     runs-on: ubuntu-22.04
@@ -95,7 +95,7 @@ jobs:
       id: plan
       run: terraform plan -no-color
       continue-on-error: true
-
+    working-directory: "infra/aws"
 
 ### Terraform apply
   Infra_deploy:
@@ -107,6 +107,7 @@ jobs:
       if: ${{ inputs.prometheus == true }}
       run: |
         terraform apply -auto-approve
+    working-directory: "infra/oci"
 
 ### Terraform apply DR
   Infra_deploy_DR:
@@ -118,7 +119,8 @@ jobs:
       if: ${{ inputs.prometheus == true }}
       run: |
         terraform apply -auto-approve
-
+    working-directory: "infra/aws"
+    
 ### Monitoring
   Monitoring_deploy:
     needs: Infra_plan_DR

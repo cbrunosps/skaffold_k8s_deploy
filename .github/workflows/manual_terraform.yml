@@ -128,5 +128,6 @@ jobs:
 ### Monitoring
   Monitoring_deploy:
     if: ${{ inputs.monitoring == true }}
+    runs-on: ubuntu-22.04
     environment: 'infra'
     uses: cbrunosps/skaffold_k8s_deploy/.github/workflows/reusable_monitoring.yml@main

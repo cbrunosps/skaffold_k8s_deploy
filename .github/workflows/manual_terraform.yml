@@ -130,4 +130,3 @@ jobs:
     if: ${{ inputs.monitoring == true }}
     environment: 'infra'
     uses: cbrunosps/skaffold_k8s_deploy/.github/workflows/reusable_monitoring.yml@main
-    secrets: inherit

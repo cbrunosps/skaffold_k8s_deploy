@@ -131,4 +131,5 @@ jobs:
     needs: Infra_deploy_DR   
     uses: cbrunosps/skaffold_k8s_deploy/.github/workflows/reusable_monitoring.yml@main
     with:
+      ref: ${{ github.sha }}
     secrets: inherit

@@ -127,8 +127,8 @@ jobs:
     
 ### Monitoring DR
   Monitoring_deploy_DR:
-    needs: Infra_deploy_DR
     if: ${{ inputs.monitoring == true }}
-    environment: 'infra'
+    needs: Infra_deploy_DR   
     uses: cbrunosps/skaffold_k8s_deploy/.github/workflows/reusable_monitoring.yml@main
+    with:
     secrets: inherit

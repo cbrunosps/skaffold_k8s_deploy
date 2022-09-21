@@ -125,9 +125,10 @@ jobs:
         terraform apply -auto-approve
       working-directory: "infra/aws"
     
-### Monitoring
-  Monitoring_deploy:
+### Monitoring DR
+  Monitoring_deploy_DR:
+    needs: Infra_deploy_DR
     if: ${{ inputs.monitoring == true }}
-    runs-on: ubuntu-22.04
     environment: 'infra'
     uses: cbrunosps/skaffold_k8s_deploy/.github/workflows/reusable_monitoring.yml@main
+    secrets: inherit

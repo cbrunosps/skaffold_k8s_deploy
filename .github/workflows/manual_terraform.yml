@@ -69,6 +69,9 @@ jobs:
   Infra_plan_DR:
     if: ${{ inputs.terraform_dr == true }}
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: infra/aws    
     steps:
     - uses: actions/checkout@v2
       with:
@@ -83,7 +86,6 @@ jobs:
     - name: Terraform fmt
       id: fmt
       run: |
-        cd infra/aws
         terraform fmt -check
       continue-on-error: true
 
@@ -113,13 +115,15 @@ jobs:
       if: ${{ inputs.prometheus == true }}
       run: |
         terraform apply -auto-approve
-      shell: bash
-      working-directory: infra/oci
+
 
 ### Terraform apply DR
   Infra_deploy_DR:
     needs: Infra_plan_DR
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: infra/aws    
     environment: 'infra'
     steps:
     - uses: actions/checkout@v2
@@ -134,7 +138,6 @@ jobs:
     - name: Terraform apply
       run: |
         terraform apply -auto-approve
-      shell: bash
           
 ### Monitoring DR
   Monitoring_deploy_DR:

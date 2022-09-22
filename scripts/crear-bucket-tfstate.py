@@ -21,7 +21,7 @@ except Exception as e:
 try:
     print("Habilitando versionado...")
     response = s3_client.put_bucket_versioning(
-        Bucket=bucket_parametros,
+        Bucket=bucket_tfstate,
         VersioningConfiguration={
             'Status': 'Enabled'
         }

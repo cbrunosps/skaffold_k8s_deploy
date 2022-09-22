@@ -9,11 +9,11 @@ try:
     bucket_tfstate = "terraform-test-remote-state-sps"
 
     response = s3_client.create_bucket(
-        Bucket=bucket_tfstate
-    )
-    CreateBucketConfiguration={
-        'LocationConstraint': REGION,
-    }    
+        Bucket=bucket_tfstate,
+        CreateBucketConfiguration={
+            'LocationConstraint': REGION,
+    },
+    )    
 except Exception as e:
     print(e)
     print("No fue posible crear bucket.")

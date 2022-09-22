@@ -119,8 +119,7 @@ jobs:
     runs-on: ubuntu-22.04
     environment: 'infra'
     steps:
-    - name: Deploying prometheus
-      if: ${{ inputs.prometheus == true }}
+    - name: Terraform apply
       run: |
         terraform apply -auto-approve
       working-directory: "infra/aws"

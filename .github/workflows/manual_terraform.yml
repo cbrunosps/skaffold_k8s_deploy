@@ -34,7 +34,6 @@ permissions:
   contents: read
 
 jobs:
-
 ### Terraform plan
   Infra_plan:
     if: ${{ inputs.terraform == true }}
@@ -82,7 +81,10 @@ jobs:
         role-to-assume: arn:aws:iam::${{secrets.DEV_AWS_ACCOUNT_ID}}:role/github-role-skaffold-demo
         role-session-name: github-role-skaffold-demo
         aws-region: us-west-2
-        
+    - name: Bucket tfstate
+      run: |
+        pip install boto3
+        python3 scripts/crear-bucket-tfstate.py
     - name: Terraform fmt
       id: fmt
       run: |

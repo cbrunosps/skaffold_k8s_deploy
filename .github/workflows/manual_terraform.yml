@@ -119,6 +119,9 @@ jobs:
     runs-on: ubuntu-22.04
     environment: 'infra'
     steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0    
     - uses: hashicorp/setup-terraform@v2
     - name: Terraform apply
       run: |

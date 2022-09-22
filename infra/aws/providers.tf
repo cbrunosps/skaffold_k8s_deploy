@@ -1,4 +1,9 @@
 terraform {
+  backend "s3" {
+    bucket = "terraform-test-remote-state-sps"
+    key = "key/terraform.tfstate"
+    region = "us-east-1"
+  }
   required_version = ">= 0.12"
 }
 

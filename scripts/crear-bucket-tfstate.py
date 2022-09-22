@@ -6,7 +6,7 @@ s3_client = sesion_origen.client("s3")
 
 try:
     print("Intentando crear bucket")
-    bucket_tfstate = "terraform-test-remote-state-sps"
+    bucket_tfstate = "terraform-tfstate-sps-demo"
 
     response = s3_client.create_bucket(
         Bucket=bucket_tfstate,

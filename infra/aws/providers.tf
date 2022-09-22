@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "terraform-test-remote-state-sps"
+    bucket = "terraform-tfstate-sps-demo"
     key = "key/terraform.tfstate"
     region = "us-west-2"
   }

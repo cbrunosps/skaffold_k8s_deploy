@@ -40,10 +40,10 @@ jobs:
     if: ${{ inputs.terraform == true }}
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.0.0
       with:
         fetch-depth: 0
-    - uses: hashicorp/setup-terraform@v2    
+    - uses: hashicorp/setup-terraform@v2.0.0    
 
     - name: Terraform fmt
       id: fmt
@@ -73,10 +73,10 @@ jobs:
       run:
         working-directory: infra/aws    
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.0.0
       with:
         fetch-depth: 0
-    - uses: hashicorp/setup-terraform@v2 
+    - uses: hashicorp/setup-terraform@v2.0.0 
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::${{secrets.DEV_AWS_ACCOUNT_ID}}:role/github-role-skaffold-demo
@@ -126,10 +126,10 @@ jobs:
         working-directory: infra/aws    
     environment: 'infra'
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.0.0
       with:
         fetch-depth: 0
-    - uses: hashicorp/setup-terraform@v2
+    - uses: hashicorp/setup-terraform@v2.0.0
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::${{secrets.DEV_AWS_ACCOUNT_ID}}:role/github-role-skaffold-demo

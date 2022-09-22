@@ -119,10 +119,11 @@ jobs:
     runs-on: ubuntu-22.04
     environment: 'infra'
     steps:
+    - uses: hashicorp/setup-terraform@v2
     - name: Terraform apply
       run: |
+        cd infra/aws/
         terraform apply -auto-approve
-      working-directory: "infra/aws"
     
 ### Monitoring DR
   Monitoring_deploy_DR:

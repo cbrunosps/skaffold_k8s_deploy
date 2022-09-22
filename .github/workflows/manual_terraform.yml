@@ -117,21 +117,22 @@ jobs:
   Infra_deploy_DR:
     needs: Infra_plan_DR
     runs-on: ubuntu-22.04
-    working-directory: "infra/aws"
     environment: 'infra'
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0    
+        fetch-depth: 0
+      working-directory: "infra/aws"        
     - uses: hashicorp/setup-terraform@v2
     - name: Terraform Init
       id: init
       run: terraform init    
+      working-directory: "infra/aws"
     - name: Terraform apply
       run: |
         cd aws       
         terraform apply -auto-approve
-    
+      working-directory: "infra/aws"
 ### Monitoring DR
   Monitoring_deploy_DR:
     if: ${{ inputs.monitoring == true }}

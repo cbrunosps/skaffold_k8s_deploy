@@ -84,7 +84,7 @@ jobs:
     - name: Bucket tfstate
       run: |
         pip install boto3
-        cd ..
+        cd ../..
         python3 scripts/crear-bucket-tfstate.py
     - name: Terraform fmt
       id: fmt

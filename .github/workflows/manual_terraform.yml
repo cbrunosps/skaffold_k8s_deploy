@@ -129,7 +129,7 @@ jobs:
   Monitoring_deploy_DR:
     if: ${{ inputs.monitoring == true }}
     needs: Infra_deploy_DR   
-    - uses: cbrunosps/skaffold_k8s_deploy/.github/workflows/reusable_monitoring.yml@main
-      with:
-        ref: ${{ github.sha }}
-      secrets: inherit
+    uses: cbrunosps/skaffold_k8s_deploy/.github/workflows/reusable_monitoring.yml@main
+    with:
+      ref: ${{ github.sha }}
+    secrets: inherit

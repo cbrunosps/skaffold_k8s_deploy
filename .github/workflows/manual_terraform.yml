@@ -82,22 +82,26 @@ jobs:
         
     - name: Terraform fmt
       id: fmt
-      run: terraform fmt -check
+      run: |
+        cd infra/aws
+        terraform fmt -check
       continue-on-error: true
 
     - name: Terraform Init
       id: init
       run: terraform init
+      
 
     - name: Terraform Validate
       id: validate
       run: terraform validate -no-color
+      
 
     - name: Terraform Plan
       id: plan
       run: terraform plan -no-color
       continue-on-error: true
-    working-directory: infra/aws
+      
     
 ### Terraform apply
   Infra_deploy:
@@ -131,7 +135,7 @@ jobs:
       run: |
         terraform apply -auto-approve
       shell: bash
-      working-directory: infra/aws    
+          
 ### Monitoring DR
   Monitoring_deploy_DR:
     if: ${{ inputs.monitoring == true }}

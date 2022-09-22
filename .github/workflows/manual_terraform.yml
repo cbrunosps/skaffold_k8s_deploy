@@ -123,6 +123,9 @@ jobs:
       with:
         fetch-depth: 0    
     - uses: hashicorp/setup-terraform@v2
+    - name: Terraform Init
+      id: init
+      run: terraform init    
     - name: Terraform apply
       run: |
         cd aws       

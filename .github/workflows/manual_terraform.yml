@@ -20,9 +20,6 @@ on:
         default: false
         required: true
         type: boolean
-defaults:
-  run:
-    working-directory: "infra"
 
 env:
   KUBE_CONFIG: ${{secrets.KUBE_CONFIG}}
@@ -118,21 +115,21 @@ jobs:
     needs: Infra_plan_DR
     runs-on: ubuntu-22.04
     environment: 'infra'
+    working-directory: "infra/aws"
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-      working-directory: "infra/aws"        
     - uses: hashicorp/setup-terraform@v2
     - name: Terraform Init
       id: init
-      run: terraform init    
-      working-directory: "infra/aws"
+      run: |
+        
+        terraform init
     - name: Terraform apply
       run: |
-        cd aws       
+        
         terraform apply -auto-approve
-      working-directory: "infra/aws"
 ### Monitoring DR
   Monitoring_deploy_DR:
     if: ${{ inputs.monitoring == true }}

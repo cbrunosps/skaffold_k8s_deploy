@@ -71,6 +71,7 @@ jobs:
   Infra_plan_DR:
     if: ${{ inputs.terraform_dr == true }}
     runs-on: ubuntu-22.04
+    working-directory: "infra/aws"
     steps:
     - uses: actions/checkout@v2
       with:
@@ -99,8 +100,7 @@ jobs:
       id: plan
       run: terraform plan -no-color
       continue-on-error: true
-      working-directory: "infra/aws"
-
+    
 ### Terraform apply
   Infra_deploy:
     needs: Infra_plan
@@ -117,6 +117,7 @@ jobs:
   Infra_deploy_DR:
     needs: Infra_plan_DR
     runs-on: ubuntu-22.04
+    working-directory: "infra/aws"
     environment: 'infra'
     steps:
     - uses: actions/checkout@v2

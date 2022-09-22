@@ -62,13 +62,13 @@ jobs:
       id: plan
       run: terraform plan -no-color
       continue-on-error: true
-      working-directory: "infra/oci"
+      shell: bash
+      working-directory: infra/oci
 
 ### Terraform DR
   Infra_plan_DR:
     if: ${{ inputs.terraform_dr == true }}
     runs-on: ubuntu-22.04
-    working-directory: "infra/aws"
     steps:
     - uses: actions/checkout@v2
       with:
@@ -97,6 +97,8 @@ jobs:
       id: plan
       run: terraform plan -no-color
       continue-on-error: true
+      shell: bash
+      working-directory: infra/aws      
     
 ### Terraform apply
   Infra_deploy:
@@ -108,14 +110,14 @@ jobs:
       if: ${{ inputs.prometheus == true }}
       run: |
         terraform apply -auto-approve
-      working-directory: "infra/oci"
+      shell: bash
+      working-directory: infra/oci
 
 ### Terraform apply DR
   Infra_deploy_DR:
     needs: Infra_plan_DR
     runs-on: ubuntu-22.04
     environment: 'infra'
-    working-directory: "infra/aws"
     steps:
     - uses: actions/checkout@v2
       with:
@@ -128,8 +130,9 @@ jobs:
         terraform init
     - name: Terraform apply
       run: |
-        
         terraform apply -auto-approve
+      shell: bash
+      working-directory: infra/aws    
 ### Monitoring DR
   Monitoring_deploy_DR:
     if: ${{ inputs.monitoring == true }}

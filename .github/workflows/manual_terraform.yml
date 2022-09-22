@@ -115,7 +115,7 @@ jobs:
 
 ### Terraform apply DR
   Infra_deploy_DR:
-    needs: Infra_plan_DR
+    #needs: Infra_plan_DR
     runs-on: ubuntu-22.04
     environment: 'infra'
     steps:
@@ -125,7 +125,10 @@ jobs:
     - uses: hashicorp/setup-terraform@v2
     - name: Terraform apply
       run: |
-        cd infra/aws/
+        pwd
+        ls
+        cd ..
+        
         terraform apply -auto-approve
     
 ### Monitoring DR

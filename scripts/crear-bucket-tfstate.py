@@ -1,6 +1,6 @@
 import boto3
-
-sesion_origen = boto3.Session(region_name=REGION_ORIGEN)
+REGION = "us-west-2"
+sesion_origen = boto3.Session(region_name=REGION)
 s3_client = sesion_origen.client("s3")
 
 if not profile:

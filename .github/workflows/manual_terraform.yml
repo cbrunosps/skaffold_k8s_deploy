@@ -97,8 +97,8 @@ jobs:
       id: plan
       run: terraform plan -no-color
       continue-on-error: true
-      shell: bash
-      working-directory: infra/aws      
+    shell: bash
+    working-directory: infra/aws
     
 ### Terraform apply
   Infra_deploy:

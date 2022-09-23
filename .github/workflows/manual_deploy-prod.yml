@@ -1,6 +1,6 @@
 name: 3 Promote to Production 🚀
 
-concurrency: preprod
+concurrency: production
 
 on:
   workflow_dispatch:

@@ -39,7 +39,6 @@ jobs:
       with:
         fetch-depth: 0
     - uses: aws-actions/configure-aws-credentials@v1
-      if: ${{ inputs.terraform_dr == true }}
       with:
         role-to-assume: arn:aws:iam::${{secrets.DEV_AWS_ACCOUNT_ID}}:role/github-role-skaffold-demo
         role-session-name: github-role-skaffold-demo

@@ -115,7 +115,7 @@ jobs:
     environment: 'infra'
     steps:
     - name: Deploying prometheus
-      if: ${{ inputs.prometheus == true }}
+      if: ${{ inputs.terraform == true }}
       run: |
         terraform apply -auto-approve
 

@@ -35,7 +35,15 @@ jobs:
     runs-on: ubuntu-22.04
     environment: develop
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - uses: aws-actions/configure-aws-credentials@v1
+      if: ${{ inputs.terraform_dr == true }}
+      with:
+        role-to-assume: arn:aws:iam::${{secrets.DEV_AWS_ACCOUNT_ID}}:role/github-role-skaffold-demo
+        role-session-name: github-role-skaffold-demo
+        aws-region: us-west-2
 
     - name: Login to Docker Hub
       uses: docker/login-action@v2
@@ -86,11 +94,7 @@ jobs:
         echo "Deploying develop...."
         
         skaffold run --namespace=develop 
-    - uses: aws-actions/configure-aws-credentials@v1
-      with:
-        role-to-assume: arn:aws:iam::${{secrets.DEV_AWS_ACCOUNT_ID}}:role/github-role-skaffold-demo
-        role-session-name: github-role-skaffold-demo
-        aws-region: us-west-2  
+
     - name: Configure Cluster DR
       run: |
         aws eks update-kubeconfig --name terraform-eks-demo --region us-west-2

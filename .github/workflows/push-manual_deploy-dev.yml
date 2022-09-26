@@ -85,7 +85,21 @@ jobs:
         kubectl create namespace develop || echo "Ya existe el namespace develop"
         echo "Deploying develop...."
         
-        skaffold run --namespace=develop     
+        skaffold run --namespace=develop 
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::${{secrets.DEV_AWS_ACCOUNT_ID}}:role/github-role-skaffold-demo
+        role-session-name: github-role-skaffold-demo
+        aws-region: us-west-2  
+    - name: Configure Cluster DR
+      run: |
+        aws eks update-kubeconfig --name terraform-eks-demo --region us-west-2
+    - name: Deploying Develop DR
+      run: |
+        kubectl create namespace develop || echo "Ya existe el namespace develop"
+        echo "Deploying develop...."
+        
+        skaffold run --namespace=develop         
       shell: bash
 
     - name: Testing installations

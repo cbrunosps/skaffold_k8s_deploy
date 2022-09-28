@@ -14,14 +14,6 @@ build:
     docker:
       dockerfile: Dockerfile
 
-  - image: docker.io/cbrunosps/examplevotingapp_vote
-    context: vote
-    docker:
-      dockerfile: Dockerfile
-  - image: docker.io/cbrunosps/examplevotingapp_worker
-    context: worker
-    docker:
-      dockerfile: Dockerfile
 deploy:
   kubectl:
     manifests:

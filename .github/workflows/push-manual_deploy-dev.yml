@@ -5,16 +5,11 @@ concurrency: develop
 on:
   workflow_dispatch:
     inputs:
-      prometheus:
-        description: 'Deploy Prometheus?'
-        required: true
-        default: false
-        type: boolean
-      promtail:
-        description: 'Deploy Promtail?'
+      deploy_dr:
+        description: 'Deploy DR?'
         default: false
         required: true
-        type: boolean    
+        type: boolean       
   push:
     branches:
       - main
@@ -99,11 +94,13 @@ jobs:
         echo "Deploying develop...."
         
         skaffold run --namespace=develop 
-
+    
     - name: Configure Cluster DR
+      if: ${{ inputs.deploy_dr == true }}
       run: |
         aws eks update-kubeconfig --name terraform-eks-demo --region us-west-2
     - name: Deploying Develop DR
+      if: ${{ inputs.deploy_dr == true }}
       run: |
         kubectl create namespace develop || echo "Ya existe el namespace develop"
         echo "Deploying develop...."

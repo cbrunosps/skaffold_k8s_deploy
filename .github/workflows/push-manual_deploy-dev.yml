@@ -30,6 +30,12 @@ permissions:
   contents: read
 
 jobs:
+  Pruebas:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: "Changelog"
+      run: |
+        cat CHANGELOG.md >> $GITHUB_STEP_SUMMARY
   kube-skaffold-cicd:
     runs-on: ubuntu-22.04
     environment: develop

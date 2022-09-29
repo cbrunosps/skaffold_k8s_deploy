@@ -7,7 +7,7 @@ Ejemplo:
 - Se valida header Content-Type para JSON y XML.
 - Se permite modificar el tamaño de página con el parametro X.
 -->
-- 
+- Se agrega gráfica de gatos vs perros
 
 ### ✏️ Modificado
 <!-- 
@@ -18,7 +18,7 @@ Ejemplo:
 - Se coloca header de Content-Type=application/JSON al llamar al API X
 - Se resuelve bug #123 que impedía paginar la respuesta cuando X
 -->
-- Se agrega
+- 
 
 
 ### ❌ Eliminado

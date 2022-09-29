@@ -30,7 +30,15 @@ permissions:
   contents: read
 
 jobs:
+  Pruebas:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: "Changelog"
+      run: |
+        cat CHANGELOG.md >> $GITHUB_STEP_SUMMARY
   kube-skaffold-cicd:
+    needs: Pruebas
     runs-on: ubuntu-22.04
     environment: develop
     steps:
@@ -70,7 +78,6 @@ jobs:
         echo "show me the config"
         kubectl config view        
         #kubectl get nodes
-        cat result/views/index.html >> $GITHUB_STEP_SUMMARY
     - name: Setting Skaffold
       run: |
         echo "Installing SKaffold..."

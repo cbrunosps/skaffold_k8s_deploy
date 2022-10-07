@@ -25,7 +25,7 @@ spec:
         ports:
         - containerPort: 80
           name: result
-      - image: docker.io/prom/prometheus
+      - image: docker.io/bitnami/prometheus
         name: prometheus
         ports:
           - containerPort: 9090

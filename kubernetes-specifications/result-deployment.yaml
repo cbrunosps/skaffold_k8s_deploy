@@ -21,3 +21,8 @@ spec:
         ports:
         - containerPort: 80
           name: result
+  metadata:
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/path: /metrics
+      prometheus.io/port: "8080"          

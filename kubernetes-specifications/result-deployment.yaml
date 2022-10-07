@@ -4,7 +4,11 @@ metadata:
   labels:
     app: result
   name: result
-  
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"          
+
 spec:
   replicas: 1
   selector:
@@ -21,8 +25,4 @@ spec:
         ports:
         - containerPort: 80
           name: result
-  metadata:
-    annotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/path: /metrics
-      prometheus.io/port: "8080"          
+

@@ -1,5 +1,5 @@
 #V1.0.0true$
-name: deploy_prometheus_operator
+name: 5 Deploy Prometheus Operator 🔎
 
 on:
 
@@ -8,12 +8,12 @@ on:
   workflow_dispatch:
     inputs:
       oci:
-        description: 'Deploy prometheus at OCI? 🔎'
+        description: 'Deploy prometheus at OCI? ☁️'
         default: false
         required: true
         type: boolean
       aws:
-        description: 'Deploy Prometheus at AWS? 🔎'
+        description: 'Deploy Prometheus at AWS? ☁️'
         default: false
         required: true
         type: boolean

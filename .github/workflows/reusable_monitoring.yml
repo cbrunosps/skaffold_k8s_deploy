@@ -42,9 +42,9 @@ jobs:
       - name: Deploying prometheus
         run: |
           # Create the namespace and CRDs, and then wait for them to be available before creating the remaining resources
-          kubectl apply --server-side -f manifests/setup
+          kubectl apply --server-side -f monitoring_stack/setup
           until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
-          kubectl apply -f manifests/
+          kubectl apply -f monitoring_stack/
       - name: Testing installations with Prometheus
         run: | 
           kubectl get pods -n monitoring

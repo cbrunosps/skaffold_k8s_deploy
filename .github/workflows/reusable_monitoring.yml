@@ -17,7 +17,10 @@ on:
         default: false
         required: true
         type: boolean
-
+permissions:
+  id-token: write
+  contents: read
+  
 jobs:
 
   Prometheus_deploy:

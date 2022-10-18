@@ -1,9 +1,22 @@
 #V1.0.0true$
-name: reusable_monitoring
+name: deploy_prometheus_operator
 
 on:
 
   workflow_call:
+
+  workflow_dispatch:
+    inputs:
+      oci:
+        description: 'Deploy prometheus at OCI? 🔎'
+        default: false
+        required: true
+        type: boolean
+      aws:
+        description: 'Deploy Prometheus at AWS? 🔎'
+        default: false
+        required: true
+        type: boolean
 
 jobs:
 
@@ -18,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: aws-actions/configure-aws-credentials@v1
-        if: ${{ inputs.terraform_dr == true }}
+        if: ${{ inputs.aws == true }}
         with:
           role-to-assume: arn:aws:iam::${{secrets.DEV_AWS_ACCOUNT_ID}}:role/github-role-skaffold-demo
           role-session-name: github-role-skaffold-demo
@@ -28,22 +41,17 @@ jobs:
           aws eks update-kubeconfig --name terraform-eks-demo --region us-west-2
       - name: Deploying prometheus
         run: |
-          kubectl create namespace monitoring || echo "Ya existe el namespace monitoring"
-          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-          helm repo update
-          helm install prometheus prometheus-community/prometheus -n monitoring
-          kubectl get svc -n monitoring
-          echo "Editar el servicio prometheus-server y convertirlo en LoadBalancer"
+          # Create the namespace and CRDs, and then wait for them to be available before creating the remaining resources
+          kubectl apply --server-side -f manifests/setup
+          until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
+          kubectl apply -f manifests/
       - name: Testing installations with Prometheus
         run: | 
           kubectl get pods -n monitoring
           kubectl get svc -n monitoring
         shell: bash
-        
+
       - name: Deploying Promtail 
         run: |
-          curl -fsS https://raw.githubusercontent.com/grafana/loki/master/tools/promtail.sh | sh -s 256193 ${{ secrets.LOKI_TOKEN }} logs-prod3.grafana.net default | kubectl apply --namespace=default -f  -
-      - name: Testing installations with Prometheus
-        run: | 
-          kubectl get pods
-        shell: bash           
+          #curl -fsS https://raw.githubusercontent.com/grafana/loki/master/tools/promtail.sh | sh -s 256193 ${{ secrets.LOKI_TOKEN }} logs-prod3.grafana.net default | kubectl apply --namespace=default -f  -
+   

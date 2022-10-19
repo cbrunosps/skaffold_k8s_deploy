@@ -45,8 +45,8 @@ jobs:
       - name: Configure Grafana Cloud remote_write secrets
         run: |
           kubectl create secret generic kubepromsecret \
-          --from-literal=username=${{ secrets.CARLOS_GRAFANA_USERNAME }}\
-          --from-literal=password='${{ secrets.CARLOS_GRAFANA_API_KEY }}'\
+          --from-literal=username=${{ secrets.CARLOS_GRAFANA_USERNAME }} \
+          --from-literal=password='${{ secrets.CARLOS_GRAFANA_API_KEY }}' \
           -n monitoring
       - name: Deploying prometheus
         run: |

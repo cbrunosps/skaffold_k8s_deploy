@@ -5,12 +5,12 @@ concurrency: production
 on:
   workflow_dispatch:
     inputs:
-      terraform:
+      cluster_principal:
         description: 'Deploy Terraform OCI? ☁️'
         default: false
         required: true
         type: boolean
-      terraform_dr:
+      cluster_dr:
         description: 'Deploy Terraform AWS? ☁️'
         default: false
         required: true
@@ -36,7 +36,7 @@ permissions:
 jobs:
 ### Terraform plan
   Infra_plan:
-    if: ${{ inputs.terraform == true }}
+    if: ${{ inputs.cluster_principal == true }}
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2.0.0
@@ -66,7 +66,7 @@ jobs:
 
 ### Terraform DR
   Infra_plan_DR:
-    if: ${{ inputs.terraform_dr == true }}
+    if: ${{ inputs.cluster_dr == true }}
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -115,7 +115,7 @@ jobs:
     environment: 'infra'
     steps:
     - name: Deploying prometheus
-      if: ${{ inputs.terraform == true }}
+      if: ${{ inputs.cluster_principal == true }}
       run: |
         terraform apply -auto-approve
 

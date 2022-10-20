@@ -44,6 +44,7 @@ jobs:
           aws eks update-kubeconfig --name terraform-eks-demo --region us-west-2
       - name: Configure Grafana Cloud remote_write secrets
         run: |
+          kubectl create namespace monitoring || echo "Ya existe el namespace."
           kubectl create secret generic kubepromsecret \
           --from-literal=username=${{ secrets.CARLOS_GRAFANA_USERNAME }} \
           --from-literal=password='${{ secrets.CARLOS_GRAFANA_API_KEY }}' \

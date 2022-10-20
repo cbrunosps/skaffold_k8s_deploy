@@ -42,6 +42,14 @@ jobs:
       - name: Configure Cluster
         run: |
           aws eks update-kubeconfig --name terraform-eks-demo --region us-west-2
+
+      - name: Deploying prometheus
+        run: |
+          # Create the namespace and CRDs, and then wait for them to be available before creating the remaining resources
+          kubectl apply --server-side -f monitoring_stack/setup
+          until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
+          kubectl apply -f monitoring_stack/
+
       - name: Configure Grafana Cloud remote_write secrets
         run: |
           kubectl create namespace monitoring || echo "Ya existe el namespace."
@@ -49,12 +57,7 @@ jobs:
           --from-literal=username=${{ secrets.CARLOS_GRAFANA_USERNAME }} \
           --from-literal=password='${{ secrets.CARLOS_GRAFANA_API_KEY }}' \
           -n monitoring
-      - name: Deploying prometheus
-        run: |
-          # Create the namespace and CRDs, and then wait for them to be available before creating the remaining resources
-          kubectl apply --server-side -f monitoring_stack/setup
-          until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
-          kubectl apply -f monitoring_stack/
+                    
       - name: Testing installations with Prometheus
         run: | 
           kubectl get pods -n monitoring

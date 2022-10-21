@@ -56,7 +56,7 @@ jobs:
           kubectl create secret generic kubepromsecret \
           --from-literal=username=${{ secrets.CARLOS_GRAFANA_USERNAME }} \
           --from-literal=password='${{ secrets.CARLOS_GRAFANA_API_KEY }}' \
-          -n monitoring
+          -n monitoring || echo "Ya existe el secreto"
 
       - name: Configure remoteWrite at Prometheus
         run: |

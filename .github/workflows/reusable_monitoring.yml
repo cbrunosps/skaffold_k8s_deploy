@@ -57,6 +57,10 @@ jobs:
           --from-literal=username=${{ secrets.CARLOS_GRAFANA_USERNAME }} \
           --from-literal=password='${{ secrets.CARLOS_GRAFANA_API_KEY }}' \
           -n monitoring
+
+      - name: Configure remoteWrite at Prometheus
+        run: |
+          kubectl apply -f monitoring_stack/prometheus_remoteWrite -n monitoring
                     
       - name: Testing installations with Prometheus
         run: | 

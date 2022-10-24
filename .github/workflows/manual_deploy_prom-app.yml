@@ -95,7 +95,7 @@ jobs:
         kubectl create namespace develop || echo "Ya existe el namespace develop"
         echo "Deploying develop DR...."
 
-        kubectl apply -f prometheus_app/example-app
+        kubectl apply -f prometheus_app/example-app -n develop
       shell: bash
 
     - name: Testing installations

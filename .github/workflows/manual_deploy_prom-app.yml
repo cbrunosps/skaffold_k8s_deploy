@@ -1,0 +1,105 @@
+name: 6 Deploy Prometheus app 🚀🔎
+
+concurrency: develop
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_dr:
+        description: 'Deploy DR?'
+        default: false
+        required: true
+        type: boolean       
+  push:
+    branches:
+      - main
+    
+        
+env:
+  KUBE_CONFIG: ${{secrets.KUBE_CONFIG}}
+  OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+  OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+  OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+  OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+  OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+  AMBIENTE: develop
+  VERSION: ${{ github.sha }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  Pruebas:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: "Changelog"
+      run: |
+        cat CHANGELOG.md >> $GITHUB_STEP_SUMMARY
+  kube-skaffold-cicd:
+    needs: Pruebas
+    runs-on: ubuntu-22.04
+    environment: develop
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::${{secrets.DEV_AWS_ACCOUNT_ID}}:role/github-role-skaffold-demo
+        role-session-name: github-role-skaffold-demo
+        aws-region: us-west-2
+        
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    
+    - name: Validating Kubernetes manifests
+      run: |
+        echo "Installing datree"
+        curl https://get.datree.io | /bin/bash
+        #datree test kubernetes-specifications/* --no-record
+
+    - name: Setting Skaffold
+      run: |
+        echo "Installing SKaffold..."
+        curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+        sudo install skaffold /usr/local/bin/
+        echo "Verifying SKaffold installation..."
+        skaffold version
+
+    - name: Configure Kubectl
+      uses: oracle-actions/configure-kubectl-oke@v1.0
+      id: test-configure-kubectl-oke-action
+      with:
+        cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+
+    - name: Run Kubectl
+      run: kubectl get nodes -A    
+      
+    - name: Deploying Develop
+      run: |
+        echo "Deploying at Develop"
+    
+    - name: Configure Cluster DR
+      if: ${{ inputs.deploy_dr == true }}
+      run: |
+        aws eks update-kubeconfig --name terraform-eks-demo --region us-west-2
+    - name: Deploying Develop DR
+      if: ${{ inputs.deploy_dr == true }}
+      run: |
+        kubectl create namespace develop || echo "Ya existe el namespace develop"
+        echo "Deploying develop DR...."
+
+        kubectl apply -f prometheus_app/example-app
+      shell: bash
+
+    - name: Testing installations
+      run: |
+        kubectl get pods
+        kubectl get pods -n develop
+        kubectl get svc -n develop

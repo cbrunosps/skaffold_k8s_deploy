@@ -10,9 +10,7 @@ on:
         default: false
         required: true
         type: boolean       
-  push:
-    branches:
-      - main
+
     
         
 env:
